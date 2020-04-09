@@ -1,0 +1,94 @@
+variable "name_sg" {
+    description                     = "Name of the Scurity group"
+    type                            = string
+    default                         = ""
+}
+variable "vpc_id" {
+    description                     = "The VPC id"
+    type                            = string
+    default                         = ""
+}
+variable "tag_name_value" {
+    description = "The value of tag Name"
+    type = string
+    default = ""
+}
+variable "tag_env_value" {
+    type = string
+    description = "The value of tag Name"
+    default = ""
+}
+variable "enable_whitelist_ip" {
+  description = "Do you want to whitelist your Ip/cidr-range"
+  type = bool
+  default = false
+}
+variable "enable_source_security_group_entry" {
+  description = "Do you want to use source security group instead of Ip/cidr-range"
+  type = bool
+  default = false
+}
+variable "create_outbound_rule_with_src_sg_id" {
+    description = "Do you want to create outbound rules"
+    type = bool
+    default = false
+}
+variable "ingress_rule" {
+    type = object({
+        rules = object({
+            rule_list = list(object({
+                from_port = number
+                to_port = number
+                protocol = string
+                cidr = list(string)
+                source_SG_ID = string
+            }))
+        })
+    })
+    default = {
+        rules = {
+            rule_list = [
+                {
+                    from_port = 80
+                    to_port = 80
+                    protocol = ""
+                    cidr = []
+                    source_SG_ID = ""
+                },
+                { 
+                    from_port = 443
+                    to_port = 443
+                    protocol = ""
+                    cidr = []
+                    source_SG_ID = ""
+                }
+            ]
+        }
+    }
+}
+variable "egress_rule" {
+    type = object({
+        rules = object({
+            rule_list = list(object({
+                from_port = number
+                to_port = number
+                protocol = string
+                cidr = list(string)
+                source_SG_ID = string
+            }))
+        })
+    })
+    default = {
+        rules = {
+            rule_list = [
+                {
+                    from_port = 0
+                    to_port = 0
+                    protocol = "-1"
+                    cidr = ["0.0.0.0/0"]
+                    source_SG_ID = ""
+                }
+            ]
+        }
+    }
+}

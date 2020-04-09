@@ -1,46 +1,130 @@
-/******************* Security Group with cidr/security_group_id *******************/
-1. You must specify whether you want to create security group rule to whitelist ip/cidr or
-   you want to give source security group instead of ip/cidr.
-    e.g
+AWS Security Group Terraform module
+=====================================
+
+[![Opstree Solutions][opstree_avatar]][opstree_homepage]
+
+[Opstree Solutions][opstree_homepage] 
+
+  [opstree_homepage]: https://opstree.github.io/
+  [opstree_avatar]: https://img.cloudposse.com/150x150/https://github.com/opstree.png
+
+Terraform module which creates security group on AWS.
+
+Types of resources supported:
+
+* [Security Groups](https://www.terraform.io/docs/providers/aws/r/security_group.html)
+
+Terraform versions
+------------------
+
+Terraform >=v0.12
+
+Usage
+------
+```hcl
+Note:
+1. You will be able to create security group rule to allow an ip/cidr-range or 
+   to allow other security group instead of ip/cidr-range. However you can allow both simultaneously.
+
       enable_whitelisting_ip                  = false    
-      enable_source_security_group_entry      = false   ### when you want to give security group
-      create_outbound_rule                    = false
+      enable_source_security_group_entry      = false
+      create_outbound_rule_with_src_sg_id     = false
     
-    1.1 When you want to whitelist ip/cidr and not source security group id, 
-        set "enable_whitelisting_ip" to true.
-    1.2 When you want to specify source security group id and not whitelist ip/cidr, 
-        set "enable_source_security_group_entry" to true.
-    1.3 When you want to configure outbound rule by yourself instead of usinf default,
-        set "create_outbound_rule" to true
+    1.1 When you want to whitelist ip/cidr-range and not source security group id, 
+          enable_whitelisting_ip = true
+    1.2 When you want to allow source security group id and not whitelist ip/cidr, 
+          enable_source_security_group_entry = true
+    1.3 When you want to allow any security group for outbound rule
+          create_outbound_rule_with_src_sg_id = true
+```
+```hcl
+provider "aws" {
+  region                  = "us-east-1"
+}
 
+module "security_group" {
+    source = "path to your main.tf"
+    enable_whitelisting_ip                       = true
+    enable_source_security_group_entry           = false
+    create_outbound_rule_with_src_sg_id          = false
 
-2. You can create your security group module like below
-    module "security_group" {
-        source                                  = "./modules/securityGroup"
+    name_sg                                 = "example"
+    vpc_id                                  = "your-vpc-id-here" 
 
-        enable_whitelisting_ip                  = false
-        enable_source_security_group_entry      = false
-        create_outbound_rule                    = false
+    tag_name_value = "example"
+    tag_env_value  = "QA"
 
-        name_sg                                 = "temp-g"
-        vpc_id                                  = "vpc-99b288e3" 
-        
-        #### set ingress rule for ip/cidr whitelist or use of source_security_group_id
-        ingress_from_port                       = [80,443]
-        ingress_to_port                         = [80,443] 
-        ingress_protocol                        = "tcp"
-        ingress_cidr                            = ["0.0.0.0/0"]
-
-        #### when you have enable_source_security_group_entry set to true then
-        #### you need to specify the source security group id
-        src_sg_id                               = "sg-1b1a4737"
-
-        #### configure outbound rule when you don't want deafault one 
-        egress_from_port                        = [0] 
-        egress_to_port                          = [0]
-        egress_protocol                         = "-1" 
-        egress_cidr                             = ["0.0.0.0/0"]
-
-        tag_name_value                          = "temp"
-        tag_env_value                           = "QA"
+    ingress_rule = {
+        rules = {
+        rule_list = [
+            {
+                from_port = 80
+                to_port = 80
+                protocol = "tcp"
+                cidr = ["10.123.210.0/24", "18.45.43.21/32"]
+                source_SG_ID = "source-security-group-id-here"
+            },
+            { 
+                from_port = 443
+                to_port = 443
+                protocol = "tcp"
+                cidr = ["0.0.0.0/0"]
+                source_SG_ID = "source-security-group-id-here"
+            }
+        ]
+        }
     }
+    egress_rule = {
+        rules = {
+        rule_list = [
+            {
+            from_port = 0
+            to_port = 0
+            protocol = "-1"
+            cidr = ["0.0.0.0/0"]
+            source_SG_ID = "source-security-group-id-here"
+            }
+        ]
+        }
+    }
+}
+```
+Tags
+----
+* Tags are assigned to the resource.
+* Additial tags can be assigned by appending key-value of tag in security group resource.
+
+Inputs
+------
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| name_sg | Name of the security group | `string` | `" "` | yes |
+| vpc_id | Id of your VPC  | `string` | `" "` | yes |
+| tag_name_value | Value for the key Name to define tag | `string` | `" "` | yes |
+| tag_env_value | Value for the key Environment to define tag | `string` | `" "` | yes |
+| enable_whitelist_ip | Set this to true when you want to allow an Ip or cidr-range | `boolean` | `"false"` | no |
+| enable_source_security_group_entry | Set this to true when you want to allow any other security group | `boolean` | `"false"` | no |
+| create_outbound_rule_with_src_sg_id | Set this to true when you need to create outbound rule to allow security groups | `boolean` | `"false"` | no |
+| ingress_rule | Define parameter's of inbound rules | `list(object)` | `" "` | no |
+| egress_rule | Define parameter's of outbound rules | `list(object)` | `"Allow all"` | no |
+
+Output
+------
+| Name | Description |
+|------|-------------|
+| sg_id | The ID of the Security group |
+| sg_arn | The arn of the Security group |
+
+## Related Projects
+
+Check out these related projects.
+
+- [HA_ec2_ALB](https://gitlab.com/ot-aws/terrafrom_v0.12.21/network_skeleton) -  Terraform module for createing a Highly available setup of an EC2 instance with quick disater recovery.
+- [security_group](https://gitlab.com/ot-aws/terrafrom_v0.12.21/security_group) - Terraform module for creating dynamic Security groups
+- [eks](https://gitlab.com/ot-aws/terrafrom_v0.12.21/eks) - Terraform module for creating elastic kubernetes cluster.
+- [rds](https://gitlab.com/ot-aws/terrafrom_v0.12.21/rds) - Terraform module for creating Relation Datbase service.
+- [HA_ec2](https://gitlab.com/ot-aws/terrafrom_v0.12.21/ha_ec2.git) - Terraform module for creating a Highly available setup of an EC2 instance with quick disater recovery.
+- [rolling_deployment](https://gitlab.com/ot-aws/terrafrom_v0.12.21/rolling_deployment.git) - This terraform module will orchestrate rolling deployment.
+
+### Contributors
+Shatrujeet
