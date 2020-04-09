@@ -92,7 +92,7 @@ module "security_group" {
 Tags
 ----
 * Tags are assigned to the resource.
-* Additial tags can be assigned by appending key-value of tag in security group resource.
+* Additional tags can be assigned by appending key-value of tag in security group resource.
 
 Inputs
 ------
