@@ -1,10 +1,15 @@
 resource "aws_security_group" "security_group" {
     name =  var.name_sg
     vpc_id = var.vpc_id 
-    tags  = {
-        Name =  var.tag_name_value,
-        Environment = var.tag_env_value
-    }
+    tags = merge(
+        {
+        "Name"                       = var.name_sg
+        },
+        {
+        "Provisioner"                = "Terraform"
+        },
+        var.tags,
+    )
 }
 
 resource "aws_security_group_rule" "with_cidr_blocks" {

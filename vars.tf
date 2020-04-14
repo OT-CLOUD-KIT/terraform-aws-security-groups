@@ -4,22 +4,16 @@ variable "name_sg" {
     default                         = ""
 }
 
+variable "tags" {
+  description = "Additional tags"
+  type        = map(string)
+  default     = {}
+}
+
 variable "vpc_id" {
     description                     = "The VPC id"
     type                            = string
     default                         = ""
-}
-
-variable "tag_name_value" {
-    description = "The value of tag-key Name"
-    type = string
-    default = ""
-}
-
-variable "tag_env_value" {
-    type = string
-    description = "The value of tag-key Environment"
-    default = ""
 }
 
 variable "type_ingress_rule" {
