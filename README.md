@@ -60,6 +60,7 @@ module "security_group" {
         rules = {
         rule_list = [
             {
+                description = "Rule for port 80"
                 from_port = 80
                 to_port = 80
                 protocol = "tcp"
@@ -67,6 +68,7 @@ module "security_group" {
                 source_SG_ID = "source-security-group-id-here"
             },
             { 
+                description = "Rule for port 80"
                 from_port = 443
                 to_port = 443
                 protocol = "tcp"
@@ -76,19 +78,29 @@ module "security_group" {
         ]
         }
     }
-    egress_rule = {
-        rules = {
-        rule_list = [
-            {
-            from_port = 0
-            to_port = 0
-            protocol = "-1"
-            cidr = ["0.0.0.0/0"]
-            source_SG_ID = "source-security-group-id-here"
-            }
-        ]
-        }
-    }
+    ## include egress_rule only when you want to override default(all allow) outbound rule ##
+    #egress_rule = {
+    #    rules = {
+    #       rule_list = [
+    #           {
+    #               description = "Egress rule"
+    #               from_port = 80
+    #               to_port = 80
+    #               protocol = "tcp"
+    #               cidr = ["0.0.0.0/0"]
+    #               source_SG_ID = "source-security-group-id-here"
+    #           },
+    #           {
+    #               description = "Egress rule"
+    #               from_port = 443
+    #               to_port = 443
+    #               protocol = "tcp"
+    #               cidr = ["0.0.0.0/0"]
+    #               source_SG_ID = "source-security-group-id-here"
+    #           }
+    #       ]
+    #    }
+    #}
 }
 ```
 Tags
