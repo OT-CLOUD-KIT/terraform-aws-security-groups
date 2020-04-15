@@ -68,7 +68,7 @@ module "security_group" {
                 source_SG_ID = "source-security-group-id-here"
             },
             { 
-                description = "Rule for port 80"
+                description = "Rule for port 443"
                 from_port = 443
                 to_port = 443
                 protocol = "tcp"
