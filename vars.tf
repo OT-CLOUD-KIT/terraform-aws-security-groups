@@ -10,6 +10,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "provisioner" {
+    description                     = "Provisioner for this resource"
+    type                            = string
+    default                         = "Terraform"
+}
+
 variable "vpc_id" {
     description                     = "The VPC id"
     type                            = string
@@ -31,7 +37,7 @@ variable "type_egress_rule" {
 variable "enable_whitelist_ip" {
   description = "Do you want to whitelist your Ip/cidr-range"
   type = bool
-  default = false
+  default = true
 }
 
 variable "enable_source_security_group_entry" {

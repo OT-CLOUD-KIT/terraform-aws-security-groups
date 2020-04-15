@@ -26,15 +26,18 @@ Note:
 1. You will be able to create security group rule to allow an ip/cidr-range or 
    to allow other security group instead of ip/cidr-range. However you can allow both simultaneously.
 
-      enable_whitelisting_ip                  = false    
+      enable_whitelist_ip                     = true    
       enable_source_security_group_entry      = false
       create_outbound_rule_with_src_sg_id     = false
     
     1.1 When you want to whitelist ip/cidr-range and not source security group id, 
-          enable_whitelisting_ip = true
+          enable_whitelist_ip = true
     1.2 When you want to allow source security group id and not whitelist ip/cidr, 
           enable_source_security_group_entry = true
-    1.3 When you want to allow any security group for outbound rule
+    1.3 When you want to allow both source security group id and whitelist ip/cidr, 
+          enable_whitelist_ip                     = true
+          enable_source_security_group_entry      = true
+    1.4 When you want to allow any security group for outbound rule
           create_outbound_rule_with_src_sg_id = true
 ```
 ```hcl
@@ -44,15 +47,14 @@ provider "aws" {
 
 module "security_group" {
     source = "path to your main.tf"
-    enable_whitelisting_ip                       = true
+    enable_whitelist_ip                          = true
     enable_source_security_group_entry           = false
     create_outbound_rule_with_src_sg_id          = false
 
     name_sg                                 = "example"
     vpc_id                                  = "your-vpc-id-here" 
 
-    tag_name_value = "example"
-    tag_env_value  = "QA"
+    tags = {Environment = "dev"}
 
     ingress_rule = {
         rules = {
@@ -102,7 +104,7 @@ Inputs
 | vpc_id | Id of your VPC  | `string` | `" "` | yes |
 | tag_name_value | Value for the key Name to define tag | `string` | `" "` | yes |
 | tag_env_value | Value for the key Environment to define tag | `string` | `" "` | yes |
-| enable_whitelist_ip | Set this to true when you want to allow an Ip or cidr-range | `boolean` | `"false"` | no |
+| enable_whitelist_ip | Set this to true when you want to allow an Ip or cidr-range | `boolean` | `"true"` | no |
 | enable_source_security_group_entry | Set this to true when you want to allow any other security group | `boolean` | `"false"` | no |
 | create_outbound_rule_with_src_sg_id | Set this to true when you need to create outbound rule to allow security groups | `boolean` | `"false"` | no |
 | ingress_rule | Define parameter's of inbound rules | `list(object)` | `" "` | no |

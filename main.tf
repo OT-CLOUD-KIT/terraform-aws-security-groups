@@ -3,10 +3,10 @@ resource "aws_security_group" "security_group" {
     vpc_id = var.vpc_id 
     tags = merge(
         {
-        "Name"                       = var.name_sg
+            "Name"                       = var.name_sg
         },
         {
-        "Provisioner"                = "Terraform"
+            "Provisioner"                = var.provisioner
         },
         var.tags,
     )
