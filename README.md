@@ -58,24 +58,24 @@ module "security_group" {
 
     ingress_rule = {
         rules = {
-        rule_list = [
-            {
-                description = "Rule for port 80"
-                from_port = 80
-                to_port = 80
-                protocol = "tcp"
-                cidr = ["10.123.210.0/24", "18.45.43.21/32"]
-                source_SG_ID = "source-security-group-id-here"
-            },
-            { 
-                description = "Rule for port 443"
-                from_port = 443
-                to_port = 443
-                protocol = "tcp"
-                cidr = ["0.0.0.0/0"]
-                source_SG_ID = "source-security-group-id-here"
-            }
-        ]
+            rule_list = [
+                {
+                    description = "Rule for port 80"
+                    from_port = 80
+                    to_port = 80
+                    protocol = "tcp"
+                    cidr = ["10.123.210.0/24", "18.45.43.21/32"]
+                    source_SG_ID = "source-security-group-id-here"
+                },
+                { 
+                    description = "Rule for port 443"
+                    from_port = 443
+                    to_port = 443
+                    protocol = "tcp"
+                    cidr = ["0.0.0.0/0"]
+                    source_SG_ID = "source-security-group-id-here"
+                }
+            ]
         }
     }
     ## include egress_rule only when you want to override default(all allow) outbound rule ##
