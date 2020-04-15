@@ -10,6 +10,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "provisioner" {
+    description                     = "Provisioner for this resource"
+    type                            = string
+    default                         = "Terraform"
+}
+
 variable "vpc_id" {
     description                     = "The VPC id"
     type                            = string
@@ -31,7 +37,7 @@ variable "type_egress_rule" {
 variable "enable_whitelist_ip" {
   description = "Do you want to whitelist your Ip/cidr-range"
   type = bool
-  default = false
+  default = true
 }
 
 variable "enable_source_security_group_entry" {
@@ -50,6 +56,7 @@ variable "ingress_rule" {
     type = object({
         rules = object({
             rule_list = list(object({
+                description = string
                 from_port = number
                 to_port = number
                 protocol = string
@@ -62,6 +69,7 @@ variable "ingress_rule" {
         rules = {
             rule_list = [
                 {
+                    description = ""
                     from_port = 80
                     to_port = 80
                     protocol = ""
@@ -69,6 +77,7 @@ variable "ingress_rule" {
                     source_SG_ID = ""
                 },
                 { 
+                    description = ""
                     from_port = 443
                     to_port = 443
                     protocol = ""
@@ -83,6 +92,7 @@ variable "egress_rule" {
     type = object({
         rules = object({
             rule_list = list(object({
+                description = string
                 from_port = number
                 to_port = number
                 protocol = string
@@ -95,6 +105,7 @@ variable "egress_rule" {
         rules = {
             rule_list = [
                 {
+                    description = "Allow all outbound traffic"
                     from_port = 0
                     to_port = 0
                     protocol = "-1"
