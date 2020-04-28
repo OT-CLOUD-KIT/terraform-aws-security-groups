@@ -61,7 +61,7 @@ variable "ingress_rule" {
                 to_port = number
                 protocol = string
                 cidr = list(string)
-                source_SG_ID = string
+                source_SG_ID = list(string)
             }))
         })
     })
@@ -74,7 +74,7 @@ variable "ingress_rule" {
                     to_port = 80
                     protocol = ""
                     cidr = []
-                    source_SG_ID = ""
+                    source_SG_ID = []
                 },
                 { 
                     description = ""
@@ -82,7 +82,7 @@ variable "ingress_rule" {
                     to_port = 443
                     protocol = ""
                     cidr = []
-                    source_SG_ID = ""
+                    source_SG_ID = []
                 }
             ]
         }

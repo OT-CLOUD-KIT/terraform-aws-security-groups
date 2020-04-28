@@ -23,14 +23,76 @@ resource "aws_security_group_rule" "with_cidr_blocks" {
     security_group_id                = aws_security_group.security_group.id
 }
 
+locals {
+    rules = var.ingress_rule.rules
+    rule_list1 = [
+        for ruleList in local.rules.rule_list:
+        {
+            description = ruleList.description
+            from_port = ruleList.from_port
+            to_port = ruleList.to_port
+            protocol = ruleList.protocol
+            cidr = ruleList.cidr
+            source_SG_ID = ruleList.source_SG_ID[0]
+        }
+    ]
+    rule_list2 = [
+        for ruleList in local.rules.rule_list:
+        {
+            description = ruleList.description
+            from_port = ruleList.from_port
+            to_port = ruleList.to_port
+            protocol = ruleList.protocol
+            cidr = ruleList.cidr
+            source_SG_ID = ruleList.source_SG_ID[1]
+        } if length(ruleList.source_SG_ID) > 1
+    ]
+    rule_list3 = [
+        for ruleList in local.rules.rule_list:
+        {
+            description = ruleList.description
+            from_port = ruleList.from_port
+            to_port = ruleList.to_port
+            protocol = ruleList.protocol
+            cidr = ruleList.cidr
+            source_SG_ID = ruleList.source_SG_ID[2]
+        } if length(ruleList.source_SG_ID) > 2
+    ]
+    rule_list4 = [
+        for ruleList in local.rules.rule_list:
+        {
+            description = ruleList.description
+            from_port = ruleList.from_port
+            to_port = ruleList.to_port
+            protocol = ruleList.protocol
+            cidr = ruleList.cidr
+            source_SG_ID = ruleList.source_SG_ID[3]
+        } if length(ruleList.source_SG_ID) > 3
+    ]
+    rule_list5 = [
+        for ruleList in local.rules.rule_list:
+        {
+            description = ruleList.description
+            from_port = ruleList.from_port
+            to_port = ruleList.to_port
+            protocol = ruleList.protocol
+            cidr = ruleList.cidr
+            source_SG_ID = ruleList.source_SG_ID[4]
+        } if length(ruleList.source_SG_ID) > 4
+    ]
+    newRules = {
+        rule_list = concat(local.rule_list1, local.rule_list2, local.rule_list3, local.rule_list4, local.rule_list5)
+    }
+}
+
 resource "aws_security_group_rule" "with_source_sg" {
-    count                            = var.enable_source_security_group_entry ? length(var.ingress_rule.rules.rule_list) : 0
+    count                            = var.enable_source_security_group_entry ? length(local.newRules.rule_list) : 0
     type                             = var.type_ingress_rule
-    description                      = var.ingress_rule.rules.rule_list[count.index].description
-    from_port                        = var.ingress_rule.rules.rule_list[count.index].from_port
-    to_port                          = var.ingress_rule.rules.rule_list[count.index].to_port
-    protocol                         = var.ingress_rule.rules.rule_list[count.index].protocol
-    source_security_group_id         = var.ingress_rule.rules.rule_list[count.index].source_SG_ID
+    description                      = local.newRules.rule_list[count.index].description
+    from_port                        = local.newRules.rule_list[count.index].from_port
+    to_port                          = local.newRules.rule_list[count.index].to_port
+    protocol                         = local.newRules.rule_list[count.index].protocol
+    source_security_group_id         = local.newRules.rule_list[count.index].source_SG_ID
     security_group_id                = aws_security_group.security_group.id
 }
 
