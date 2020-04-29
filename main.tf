@@ -25,66 +25,28 @@ resource "aws_security_group_rule" "with_cidr_blocks" {
 
 locals {
     rules = var.ingress_rule.rules
-    rule_list1 = [
-        for ruleList in local.rules.rule_list:
+    ruleList = [
+        for rule in local.rules.rule_list:
         {
-            description = ruleList.description
-            from_port = ruleList.from_port
-            to_port = ruleList.to_port
-            protocol = ruleList.protocol
-            cidr = ruleList.cidr
-            source_SG_ID = ruleList.source_SG_ID[0]
+            sg_ids = [
+                for id in rule.source_SG_ID:
+                {
+                    description = rule.description
+                    from_port = rule.from_port
+                    to_port = rule.to_port
+                    protocol = rule.protocol
+                    cidr = rule.cidr
+                    source_SG_ID = id
+                }
+            ]
         }
     ]
-    rule_list2 = [
-        for ruleList in local.rules.rule_list:
-        {
-            description = ruleList.description
-            from_port = ruleList.from_port
-            to_port = ruleList.to_port
-            protocol = ruleList.protocol
-            cidr = ruleList.cidr
-            source_SG_ID = ruleList.source_SG_ID[1]
-        } if length(ruleList.source_SG_ID) > 1
-    ]
-    rule_list3 = [
-        for ruleList in local.rules.rule_list:
-        {
-            description = ruleList.description
-            from_port = ruleList.from_port
-            to_port = ruleList.to_port
-            protocol = ruleList.protocol
-            cidr = ruleList.cidr
-            source_SG_ID = ruleList.source_SG_ID[2]
-        } if length(ruleList.source_SG_ID) > 2
-    ]
-    rule_list4 = [
-        for ruleList in local.rules.rule_list:
-        {
-            description = ruleList.description
-            from_port = ruleList.from_port
-            to_port = ruleList.to_port
-            protocol = ruleList.protocol
-            cidr = ruleList.cidr
-            source_SG_ID = ruleList.source_SG_ID[3]
-        } if length(ruleList.source_SG_ID) > 3
-    ]
-    rule_list5 = [
-        for ruleList in local.rules.rule_list:
-        {
-            description = ruleList.description
-            from_port = ruleList.from_port
-            to_port = ruleList.to_port
-            protocol = ruleList.protocol
-            cidr = ruleList.cidr
-            source_SG_ID = ruleList.source_SG_ID[4]
-        } if length(ruleList.source_SG_ID) > 4
-    ]
+
+    finalList = [for list_item in local.ruleList: flatten(list_item.sg_ids)]
     newRules = {
-        rule_list = concat(local.rule_list1, local.rule_list2, local.rule_list3, local.rule_list4, local.rule_list5)
+        rule_list = flatten(local.finalList)
     }
 }
-
 resource "aws_security_group_rule" "with_source_sg" {
     count                            = var.enable_source_security_group_entry ? length(local.newRules.rule_list) : 0
     type                             = var.type_ingress_rule
