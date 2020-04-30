@@ -34,7 +34,6 @@ Note:
           enable_whitelist_ip = true
     1.2 When you want to allow source security group id and not whitelist ip/cidr, 
           enable_source_security_group_entry = true
-          * at present an array of upto 5 elements for source_security_group_id is functional.
     1.3 When you want to allow both source security group id and whitelist ip/cidr, 
           enable_whitelist_ip                     = true
           enable_source_security_group_entry      = true
@@ -66,7 +65,7 @@ module "security_group" {
                     to_port = 80
                     protocol = "tcp"
                     cidr = ["10.123.210.0/24", "18.45.43.21/32"]
-                    source_SG_ID = ["source-security-group-id-here.Maximum of 5 elements supported as of now"]
+                    source_SG_ID = ["source-security-group-id-here"]
                 },
                 { 
                     description = "Rule for port 443"
@@ -74,7 +73,7 @@ module "security_group" {
                     to_port = 443
                     protocol = "tcp"
                     cidr = ["0.0.0.0/0"]
-                    source_SG_ID = ["source-security-group-id-here.Maximum of 5 elements supported as of now"]
+                    source_SG_ID = ["source-security-group-id-here"]
                 }
             ]
         }
