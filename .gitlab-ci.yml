@@ -1,0 +1,19 @@
+---
+image: 
+  name: opstree/tflinter:v1-4
+  entrypoint: [""]
+stages:
+  - lint
+  - test
+
+codelint:    
+  stage: lint
+  script: 
+    - tflint
+
+codetest:
+  stage: test
+  script:
+    - echo "To be written in future development"
+...
+
