@@ -129,16 +129,5 @@ Output
 | sg_id | The ID of the Security group |
 | sg_arn | The arn of the Security group |
 
-## Related Projects
-
-Check out these related projects.
-
-- [HA_ec2_ALB](https://gitlab.com/ot-aws/terrafrom_v0.12.21/network_skeleton) -  Terraform module for createing a Highly available setup of an EC2 instance with quick disater recovery.
-- [security_group](https://gitlab.com/ot-aws/terrafrom_v0.12.21/security_group) - Terraform module for creating dynamic Security groups
-- [eks](https://gitlab.com/ot-aws/terrafrom_v0.12.21/eks) - Terraform module for creating elastic kubernetes cluster.
-- [rds](https://gitlab.com/ot-aws/terrafrom_v0.12.21/rds) - Terraform module for creating Relation Datbase service.
-- [HA_ec2](https://gitlab.com/ot-aws/terrafrom_v0.12.21/ha_ec2.git) - Terraform module for creating a Highly available setup of an EC2 instance with quick disater recovery.
-- [rolling_deployment](https://gitlab.com/ot-aws/terrafrom_v0.12.21/rolling_deployment.git) - This terraform module will orchestrate rolling deployment.
-
 ### Contributors
 Shatrujeet
