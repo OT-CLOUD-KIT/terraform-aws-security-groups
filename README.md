@@ -37,8 +37,6 @@ Note:
     1.3 When you want to allow both source security group id and whitelist ip/cidr, 
           enable_whitelist_ip                     = true
           enable_source_security_group_entry      = true
-    1.4 When you want to allow any security group for outbound rule
-          create_outbound_rule_with_src_sg_id = true
 ```
 ```hcl
 provider "aws" {
@@ -56,51 +54,47 @@ module "security_group" {
 
     tags = {Environment = "dev"}
 
-    ingress_rule = {
-        rules = {
-            rule_list = [
+    ingress_rule = [
                 {
                     description = "Rule for port 80"
                     from_port = 80
                     to_port = 80
                     protocol = "tcp"
-                    cidr = ["10.123.210.0/24", "18.45.43.21/32"]
-                    source_SG_ID = ["source-security-group-id-here"]
+                    cidr = ["10.123.210.0/24"]
+                    ipv6_cidr    = []
+                    source_SG_ID = ""
                 },
                 { 
                     description = "Rule for port 443"
                     from_port = 443
                     to_port = 443
                     protocol = "tcp"
-                    cidr = ["0.0.0.0/0"]
+                    cidr = []
+                    ipv6_cidr    = []
                     source_SG_ID = ["source-security-group-id-here"]
                 }
             ]
-        }
-    }
-    ## include egress_rule only when you want to override default(all allow) outbound rule ##
-    #egress_rule = {
-    #    rules = {
-    #       rule_list = [
-    #           {
-    #               description = "Egress rule"
-    #               from_port = 80
-    #               to_port = 80
-    #               protocol = "tcp"
-    #               cidr = ["0.0.0.0/0"]
-    #               source_SG_ID = "source-security-group-id-here"
-    #           },
-    #           {
-    #               description = "Egress rule"
-    #               from_port = 443
-    #               to_port = 443
-    #               protocol = "tcp"
-    #               cidr = ["0.0.0.0/0"]
-    #               source_SG_ID = "source-security-group-id-here"
-    #           }
-    #       ]
-    #    }
-    #}
+    
+    egress_rule =[
+               {
+                   description = "Egress rule"
+                   from_port = 80
+                   to_port = 80
+                   protocol = "tcp"
+                   cidr = []
+                   ipv6_cidr    = []
+                   source_SG_ID = "source-security-group-id-here"
+               },
+               {
+                   description = "Egress rule"
+                   from_port = 443
+                   to_port = 443
+                   protocol = "tcp"
+                   cidr = ["0.0.0.0/0"]
+                   ipv6_cidr    = []
+                   source_SG_ID = ""
+               }
+           ]
 }
 ```
 Tags
@@ -131,3 +125,4 @@ Output
 
 ### Contributors
 Shatrujeet
+nikhil panchal
