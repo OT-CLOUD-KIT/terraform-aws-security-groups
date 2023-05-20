@@ -110,5 +110,5 @@ Output
 | sg_arn | The arn of the Security group |
 
 ### Contributors
-Nikhil panchal
-Ashutosh Yadav
+- Nikhil panchal
+- Ashutosh Yadav
