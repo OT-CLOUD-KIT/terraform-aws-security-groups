@@ -28,10 +28,6 @@ provider "aws" {
 
 module "security_group" {
     source = "path to your main.tf"
-    enable_whitelist_ip                          = true
-    enable_source_security_group_entry           = false
-    create_outbound_rule_with_src_sg_id          = false
-
     name_sg                                 = "example"
     vpc_id                                  = "your-vpc-id-here" 
 
