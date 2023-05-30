@@ -17,7 +17,7 @@ variable "provisioner" {
 }
 
 variable "vpc_id" {
-  description = "The VPC id"
+  description = "The VPC id in which security group is going to create"
   type        = string
   default     = ""
 }
@@ -46,7 +46,9 @@ variable "ingress_rule" {
       protocol     = ""
     }
   ]
+  description = "List of ingress rules for security group"
 }
+
 variable "egress_rule" {
   type = list(object({
     description  = string
@@ -66,4 +68,5 @@ variable "egress_rule" {
       cidr         = ["0.0.0.0/0"]
     }
   ]
+  description = "List of egress rules for security group"
 }
