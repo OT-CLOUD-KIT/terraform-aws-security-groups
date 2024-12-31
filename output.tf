@@ -1,7 +1,9 @@
 output "sg_id" {
-  value = aws_security_group.security_group.id
+  value       = var.security_group_id == null ? aws_security_group.security_group[0].id : var.security_group_id
+  description = "Security group id"
 }
 
 output "sg_arn" {
-  value = aws_security_group.security_group.arn
+  value       = var.security_group_id == null ? aws_security_group.security_group[0].arn : null
+  description = "Security group arn"
 }
